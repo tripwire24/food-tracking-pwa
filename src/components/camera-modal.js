@@ -1,0 +1,1 @@
+// Camera Modal Component - placeholder

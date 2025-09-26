@@ -1,0 +1,1 @@
+// Food Entry Component - placeholder

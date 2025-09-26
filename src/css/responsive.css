@@ -1,0 +1,20 @@
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .nav-list {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .capture-options {
+        grid-template-columns: 1fr;
+    }
+}
