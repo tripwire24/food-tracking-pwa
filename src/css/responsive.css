@@ -1,20 +1,207 @@
-/* Responsive Design */
+/* Food Tracking PWA - Responsive Design */
 
+/* Mobile First - Adjustments for larger screens */
+@media (min-width: 769px) {
+    .nav-menu {
+        position: static;
+        transform: none;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+    
+    .nav-menu.hidden {
+        transform: none;
+        display: block;
+    }
+    
+    .menu-btn {
+        display: none;
+    }
+    
+    .nav-list {
+        justify-content: center;
+    }
+}
+
+/* Tablet and Mobile Adjustments */
 @media (max-width: 768px) {
+    .app-header {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .app-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .main-content {
+        padding: var(--spacing-md);
+    }
+    
     .nav-list {
         flex-direction: column;
         gap: 0;
+        padding: 0 var(--spacing-md);
+    }
+    
+    .nav-link {
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-md);
+        border-radius: 0;
+        border-bottom: 1px solid var(--outline-variant);
+    }
+    
+    .nav-link:last-child {
+        border-bottom: none;
     }
     
     .quick-actions {
         flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        justify-content: center;
     }
     
     .summary-cards {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
     }
     
     .capture-options {
         grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .capture-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .settings-group {
+        padding: var(--spacing-md);
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .setting-item input {
+        width: 100%;
+    }
+    
+    .welcome-section h2 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .capture-container h2,
+    .dashboard-container h2,
+    .history-container h2,
+    .settings-container h2 {
+        font-size: var(--font-size-xl);
+    }
+}
+
+/* Small Mobile Adjustments */
+@media (max-width: 480px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .nutrition-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .camera-container {
+        max-width: 95vw;
+        max-height: 60vh;
+    }
+    
+    .modal-content {
+        max-width: 95vw;
+        padding: var(--spacing-md);
+    }
+    
+    .notification {
+        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+        max-width: none;
+        min-width: auto;
+        transform: translateY(-100%);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .welcome-section {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .today-summary {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .camera-container {
+        max-height: 50vh;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .app-title,
+    .welcome-section h2,
+    .capture-container h2,
+    .dashboard-container h2,
+    .history-container h2,
+    .settings-container h2 {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Dark Mode Support (if system preference) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #121212;
+        --surface: #1E1E1E;
+        --surface-variant: #2C2C2C;
+        --on-surface: #E0E0E0;
+        --on-surface-variant: #BDBDBD;
+        --outline: #757575;
+        --outline-variant: #424242;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .spinner {
+        animation: none;
+    }
+    
+    .progress-fill::after {
+        animation: none;
     }
 }
