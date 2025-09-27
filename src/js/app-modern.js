@@ -121,21 +121,20 @@ class NutriTrackApp {
 
         try {
             captureArea.innerHTML = `
-                <div class="card">
-                    <div class="camera-container" style="position: relative; background: #000; border-radius: 0.75rem; overflow: hidden;">
-                        <video id="camera-video" style="width: 100%; height: auto; display: block;" autoplay playsinline></video>
-                    </div>
-                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                        <button id="capture-photo-btn" class="btn btn-primary" style="flex: 1;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 15.2c1.74 0 3.15-1.41 3.15-3.15S13.74 8.9 12 8.9s-3.15 1.41-3.15 3.15S10.26 15.2 12 15.2z"/>
-                                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-                            </svg>
-                            Capture
-                        </button>
-                        <button id="cancel-camera-btn" class="btn btn-secondary">
-                            Cancel
-                        </button>
+                <div class="camera-view" style="position: relative; max-width: 500px; margin: 0 auto;">
+                    <div class="camera-container" style="position: relative; background: #000; border-radius: 0.75rem; overflow: hidden; aspect-ratio: 4/3;">
+                        <video id="camera-video" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" autoplay playsinline></video>
+                        <div style="position: absolute; bottom: 1rem; left: 0; right: 0; display: flex; gap: 0.75rem; padding: 0 1rem; z-index: 10;">
+                            <button id="cancel-camera-btn" class="btn btn-secondary" style="backdrop-filter: blur(10px); background: rgba(255,255,255,0.9);">
+                                Cancel
+                            </button>
+                            <button id="capture-photo-btn" class="btn btn-primary" style="flex: 1; backdrop-filter: blur(10px); background: rgba(91, 33, 182, 0.9);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,10L12,15L17,10H7Z"/>
+                                </svg>
+                                Capture Photo
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -401,15 +400,88 @@ class NutriTrackApp {
     async loadDashboard() {
         const container = document.querySelector('#dashboard-page .dashboard-container');
         if (container) {
-            container.innerHTML = `
-                <div class="card">
-                    <h2 class="welcome-title">Your Stats</h2>
-                    <p style="text-align: center; color: var(--gray-600);">
-                        Dashboard features coming soon!
-                    </p>
-                </div>
-            `;
+            try {
+                const dashboardData = await FoodStorage.getDashboardData();
+                const todayData = await FoodStorage.getTodayNutrition();
+                
+                container.innerHTML = `
+                    <div class="card" style="margin-bottom: 1.5rem;">
+                        <h2 class="welcome-title" style="margin-bottom: 1.5rem;">Today's Stats</h2>
+                        
+                        <!-- Today's Totals -->
+                        <div class="summary-grid" style="margin-bottom: 2rem;">
+                            <div class="summary-card">
+                                <div class="card-value">${todayData.calories || 0}</div>
+                                <div class="card-label">Calories</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="card-value">${todayData.protein || 0}g</div>
+                                <div class="card-label">Protein</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="card-value">${todayData.carbs || 0}g</div>
+                                <div class="card-label">Carbs</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="card-value">${todayData.fat || 0}g</div>
+                                <div class="card-label">Fat</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Trend -->
+                        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">7-Day Calorie Trend</h3>
+                        <div class="chart-container" style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem; overflow-x: auto;">
+                            <div style="display: flex; align-items: flex-end; gap: 0.5rem; min-width: 300px; height: 150px;">
+                                ${Object.entries(dashboardData.weeklyCalories || {}).map(([date, calories]) => {
+                                    const height = Math.max(20, (calories / 2500) * 100); // Scale to max 2500 cal
+                                    const day = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
+                                    return `
+                                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                            <div style="width: 100%; background: var(--primary); height: ${height}%; border-radius: 0.25rem 0.25rem 0 0; position: relative;">
+                                                <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">
+                                                    ${calories}
+                                                </span>
+                                            </div>
+                                            <span style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">${day}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- Macro Breakdown -->
+                        <h3 style="font-size: 1.125rem; font-weight: 600; margin: 1.5rem 0 1rem;">Macro Breakdown</h3>
+                        <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem;">
+                            ${this.renderMacroBar('Protein', todayData.protein || 0, 150, '--success')}
+                            ${this.renderMacroBar('Carbs', todayData.carbs || 0, 200, '--warning')}
+                            ${this.renderMacroBar('Fat', todayData.fat || 0, 70, '--info')}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                container.innerHTML = `
+                    <div class="card">
+                        <p style="text-align: center; color: var(--gray-600);">No data to display yet. Start tracking your meals!</p>
+                    </div>
+                `;
+            }
         }
+    }
+    
+    renderMacroBar(name, value, goal, color) {
+        const percentage = Math.min(100, (value / goal) * 100);
+        return `
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <span style="font-weight: 500;">${name}</span>
+                    <span style="font-size: 0.875rem; color: var(--gray-600);">${value}g / ${goal}g</span>
+                </div>
+                <div style="background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: var(${color}); width: ${percentage}%; height: 100%; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+        `;
     }
 
     async loadHistory() {
@@ -496,13 +568,99 @@ class NutriTrackApp {
         }, 3000);
     }
 
-    // Service Worker
+    // Service Worker and PWA
     setupServiceWorker() {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker registered'))
+                .then(reg => {
+                    console.log('Service Worker registered');
+                    this.checkPWAInstallability();
+                })
                 .catch(err => console.error('Service Worker failed:', err));
         }
+    }
+    
+    // Check if PWA can be installed
+    checkPWAInstallability() {
+        // Check if running as standalone PWA
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                           window.navigator.standalone || 
+                           document.referrer.includes('android-app://');
+        
+        if (!isStandalone) {
+            // Listen for install prompt
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                this.showInstallBanner(deferredPrompt);
+            });
+            
+            // iOS Safari - show install instructions
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            if (isIOS && !isStandalone) {
+                setTimeout(() => this.showiOSInstallPrompt(), 2000);
+            }
+        }
+    }
+    
+    // Show install banner for Android/Desktop
+    showInstallBanner(deferredPrompt) {
+        const banner = document.createElement('div');
+        banner.className = 'install-banner';
+        banner.innerHTML = `
+            <div style="background: var(--primary); color: white; padding: 1rem; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-lg);">
+                <div style="flex: 1;">
+                    <p style="font-weight: 600; margin: 0;">Install NutriTrack</p>
+                    <p style="font-size: 0.875rem; margin: 0.25rem 0 0 0; opacity: 0.9;">Add to home screen for the best experience</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="install-accept" class="btn" style="background: white; color: var(--primary); padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        Install
+                    </button>
+                    <button id="install-dismiss" class="btn" style="background: transparent; color: white; border: 1px solid white; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        Later
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(banner);
+        
+        document.getElementById('install-accept')?.addEventListener('click', async () => {
+            banner.remove();
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            console.log('Install prompt result:', result);
+        });
+        
+        document.getElementById('install-dismiss')?.addEventListener('click', () => {
+            banner.remove();
+        });
+    }
+    
+    // Show iOS install instructions
+    showiOSInstallPrompt() {
+        const prompt = document.createElement('div');
+        prompt.className = 'ios-install-prompt';
+        prompt.innerHTML = `
+            <div style="position: fixed; bottom: 20px; left: 20px; right: 20px; background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: var(--shadow-xl); z-index: 1000;">
+                <h3 style="margin: 0 0 0.5rem 0; font-size: 1.125rem;">Install NutriTrack</h3>
+                <p style="margin: 0 0 1rem 0; color: var(--gray-600); font-size: 0.875rem;">
+                    Install this app on your iPhone: tap 
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)" style="vertical-align: middle;">
+                        <path d="M12,16L19.36,8.64C19.75,8.25 19.75,7.62 19.36,7.22C18.97,6.83 18.34,6.83 17.95,7.22L13,12.17V3C13,2.45 12.55,2 12,2C11.45,2 11,2.45 11,3V12.17L6.05,7.22C5.66,6.83 5.03,6.83 4.64,7.22C4.25,7.62 4.25,8.25 4.64,8.64L12,16M5,20H19C19.55,20 20,19.55 20,19C20,18.45 19.55,18 19,18H5C4.45,18 4,18.45 4,19C4,19.55 4.45,20 5,20Z"/>
+                    </svg>
+                    and then "Add to Home Screen"
+                </p>
+                <button onclick="this.parentElement.parentElement.remove()" class="btn btn-secondary" style="width: 100%;">
+                    Got it
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(prompt);
     }
 }
 
