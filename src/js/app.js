@@ -5,6 +5,7 @@ class FoodTrackerApp {
         this.isOnline = navigator.onLine;
         this.nutritionData = {};
         this.foodHistory = [];
+        this.installPrompt = null;
         
         this.init();
     }
@@ -16,6 +17,7 @@ class FoodTrackerApp {
         // Initialize components
         this.setupEventListeners();
         this.setupServiceWorkerListener();
+        this.setupPWAInstallPrompt();
         this.loadUserData();
         this.updateOnlineStatus();
         
@@ -109,6 +111,168 @@ class FoodTrackerApp {
                 }
             });
         }
+    }
+
+    // Setup PWA install prompt
+    setupPWAInstallPrompt() {
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('PWA install prompt available');
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Store the event so we can trigger it later
+            this.installPrompt = e;
+            // Show install button/banner
+            this.showInstallButton();
+        });
+
+        // Listen for the app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            this.hideInstallButton();
+            this.showNotification('App installed successfully!', 'success');
+        });
+    }
+
+    // Show install button
+    showInstallButton() {
+        // Add install button to header if it doesn't exist
+        const headerContent = document.querySelector('.header-content');
+        if (headerContent && !document.getElementById('install-btn')) {
+            const installBtn = document.createElement('button');
+            installBtn.id = 'install-btn';
+            installBtn.className = 'install-btn';
+            installBtn.innerHTML = '📲 Install App';
+            installBtn.addEventListener('click', () => this.promptInstall());
+            
+            // Insert before menu button
+            const menuBtn = document.getElementById('menu-btn');
+            headerContent.insertBefore(installBtn, menuBtn);
+        }
+    }
+
+    // Hide install button
+    hideInstallButton() {
+        const installBtn = document.getElementById('install-btn');
+        if (installBtn) {
+            installBtn.remove();
+        }
+    }
+
+    // Prompt user to install PWA
+    async promptInstall() {
+        if (!this.installPrompt) {
+            this.showNotification('App installation not available', 'warning');
+            return;
+        }
+
+        // Show the install prompt
+        const result = await this.installPrompt.prompt();
+        console.log('Install prompt result:', result);
+
+        // Handle the result
+        if (result.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+        } else {
+            console.log('User dismissed the install prompt');
+        }
+
+        // Clear the stored prompt
+        this.installPrompt = null;
+        this.hideInstallButton();
+    }
+
+    // Show loading overlay
+    showLoading(message = 'Loading...') {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.querySelector('p').textContent = message;
+            overlay.classList.remove('hidden');
+        }
+    }
+
+    // Hide loading overlay
+    hideLoading() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    }
+
+    // Show notification
+    showNotification(message, type = 'info') {
+        // Remove existing notification
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+
+        // Add to DOM
+        document.body.appendChild(notification);
+
+        // Show notification
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // Show success message
+    showSuccess(message) {
+        this.showNotification(message, 'success');
+    }
+
+    // Show error message
+    showError(message) {
+        this.showNotification(message, 'error');
+    }
+
+    // Update online status
+    updateOnlineStatus() {
+        const statusIndicator = document.querySelector('.status-indicator');
+        if (statusIndicator) {
+            statusIndicator.className = this.isOnline ? 'status-indicator status-online' : 'status-indicator status-offline';
+            statusIndicator.textContent = this.isOnline ? '🟢 Online' : '🔴 Offline';
+        }
+    }
+
+    // Load user data (placeholder)
+    async loadUserData() {
+        try {
+            // Placeholder for loading user preferences, settings, etc.
+            console.log('Loading user data...');
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
+    }
+
+    // Load settings (placeholder)
+    loadSettings() {
+        console.log('Loading settings page...');
+    }
+
+    // Sync offline data (placeholder)
+    syncOfflineData() {
+        console.log('Syncing offline data...');
+    }
+
+    // Handle sync success (placeholder)
+    handleSyncSuccess(data) {
+        console.log('Sync successful:', data);
+        this.showSuccess('Data synchronized successfully!');
+    }
+
+    // Show update notification (placeholder)
+    showUpdateNotification() {
+        this.showNotification('A new version is available! Please refresh the page.', 'info');
     }
 
     // Show specific page
