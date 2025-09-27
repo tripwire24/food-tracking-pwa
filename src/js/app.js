@@ -29,25 +29,40 @@ class FoodTrackerApp {
 
     // Setup event listeners
     setupEventListeners() {
-        // Menu toggle
+        // Menu toggle with debug logging
         const menuBtn = document.getElementById('menu-btn');
         const navMenu = document.getElementById('nav-menu');
         
-        menuBtn?.addEventListener('click', () => {
-            menuBtn.classList.toggle('active');
-            navMenu.classList.toggle('hidden');
-        });
+        console.log('Setting up menu listeners:', { menuBtn: !!menuBtn, navMenu: !!navMenu });
+        
+        if (menuBtn && navMenu) {
+            menuBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Menu button clicked');
+                menuBtn.classList.toggle('active');
+                navMenu.classList.toggle('hidden');
+                console.log('Menu state:', { active: menuBtn.classList.contains('active'), hidden: navMenu.classList.contains('hidden') });
+            });
+        } else {
+            console.error('Menu elements not found:', { menuBtn, navMenu });
+        }
 
-        // Navigation links
+        // Navigation links with debugging
         const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
+        console.log(`Found ${navLinks.length} navigation links`);
+        
+        navLinks.forEach((link, index) => {
+            console.log(`Nav link ${index}:`, link.dataset.page);
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const page = e.target.dataset.page;
+                console.log('Navigation clicked:', page);
                 if (page) {
                     this.showPage(page);
-                    navMenu.classList.add('hidden');
-                    menuBtn.classList.remove('active');
+                    if (navMenu) navMenu.classList.add('hidden');
+                    if (menuBtn) menuBtn.classList.remove('active');
+                } else {
+                    console.error('No page data found for link:', e.target);
                 }
             });
         });
@@ -582,18 +597,6 @@ class FoodTrackerApp {
         console.log('Loading user settings...');
     }
 
-    // Load user data on app start
-    async loadUserData() {
-        try {
-            const userData = await FoodStorage.getUserData();
-            if (userData) {
-                this.nutritionData = userData.nutritionData || {};
-                this.foodHistory = userData.foodHistory || [];
-            }
-        } catch (error) {
-            console.error('Error loading user data:', error);
-        }
-    }
 
     // Update online status indicator
     updateOnlineStatus() {
