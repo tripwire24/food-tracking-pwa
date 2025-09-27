@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96">
+        <circle cx="48" cy="48" r="44" fill="#2E7D32"/>
+        <text x="48" y="48" text-anchor="middle" dy="0.35em" 
+              font-family="Arial" font-size="24" fill="white">🍽️</text>
+    </svg>
