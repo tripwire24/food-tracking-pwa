@@ -16,31 +16,34 @@ class AIVision {
     // Analyze food from image
     static async analyzeFood(imageFile) {
         try {
-            // Mock implementation - replace with actual API call
             console.log('Analyzing food image:', imageFile.name);
             
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Show analyzing animation
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Try to extract food info from filename first
+            // Use real nutrition API
+            if (typeof NutritionAPI !== 'undefined') {
+                const analysisData = await NutritionAPI.analyzeImage(imageFile);
+                
+                // Cache the result
+                const cacheKey = `image_${await this.generateImageHash(imageFile)}`;
+                await FoodStorage.cacheNutritionData(cacheKey, analysisData);
+                
+                return analysisData;
+            }
+            
+            // Fallback to enhanced local analysis
             const filename = imageFile.name.toLowerCase();
             let analysisData;
             
             if (filename.includes('mung') || filename.includes('bean')) {
-                analysisData = this.generateMockNutritionFromText('mung beans');
+                analysisData = await NutritionAPI.getNutritionData('mung beans');
             } else {
-                // Use enhanced analysis based on common image names
-                analysisData = this.generateMockNutritionFromText(filename.replace(/\.[^/.]+$/, ''));
+                analysisData = await NutritionAPI.getNutritionData(filename.replace(/\.[^/.]+$/, ''));
             }
             
-            // Add image-specific confidence
             analysisData.confidence = 80;
             analysisData.source = 'image_analysis';
-            analysisData.detectedFoods[0].confidence = 80;
-            
-            // Cache the result
-            const cacheKey = `image_${await this.generateImageHash(imageFile)}`;
-            await FoodStorage.cacheNutritionData(cacheKey, analysisData);
             
             return analysisData;
             
@@ -62,16 +65,22 @@ class AIVision {
                 return cached;
             }
             
-            // Mock implementation - replace with actual API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            // Simple keyword-based mock analysis
-            const mockData = this.generateMockNutritionFromText(description);
+            // Use real nutrition API
+            let nutritionData;
+            if (typeof NutritionAPI !== 'undefined') {
+                nutritionData = await NutritionAPI.getNutritionData(description);
+            } else {
+                // Fallback to local analysis
+                nutritionData = this.generateMockNutritionFromText(description);
+            }
             
             // Cache the result
-            await FoodStorage.cacheNutritionData(cacheKey, mockData);
+            await FoodStorage.cacheNutritionData(cacheKey, nutritionData);
             
-            return mockData;
+            return nutritionData;
             
         } catch (error) {
             console.error('Text analysis failed:', error);

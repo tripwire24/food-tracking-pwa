@@ -23,9 +23,7 @@
     <link rel="manifest" href="./manifest.json">
     
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="./src/css/main.css">
-    <link rel="stylesheet" href="./src/css/components.css">
-    <link rel="stylesheet" href="./src/css/responsive.css">
+    <link rel="stylesheet" href="./src/css/modern.css">
     
     <title>Food Tracker - AI Nutrition Analysis</title>
 </head>
@@ -35,24 +33,51 @@
         <!-- Header -->
         <header class="app-header">
             <div class="header-content">
-                <h1 class="app-title">🍽️ Food Tracker</h1>
-                <button id="menu-btn" class="menu-btn" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="app-logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11,9H9V2H7V9H5V2H3V9C3,11.12 4.66,12.84 6.75,12.97L6,22H9L8.25,12.97C10.34,12.84 12,11.12 12,9V2H10V9M16,6V14H18.5V22H21.5V14H24V6H16Z"/>
+                    </svg>
+                    <span class="app-name">NutriTrack</span>
+                </div>
+                <button id="profile-btn" class="profile-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                    </svg>
                 </button>
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav id="nav-menu" class="nav-menu hidden">
-            <ul class="nav-list">
-                <li><a href="#home" class="nav-link active" data-page="home">🏠 Home</a></li>
-                <li><a href="#capture" class="nav-link" data-page="capture">📸 Capture Food</a></li>
-                <li><a href="#dashboard" class="nav-link" data-page="dashboard">📊 Dashboard</a></li>
-                <li><a href="#history" class="nav-link" data-page="history">📋 History</a></li>
-                <li><a href="#settings" class="nav-link" data-page="settings">⚙️ Settings</a></li>
-            </ul>
+        <!-- Bottom Navigation Bar (Mobile First) -->
+        <nav id="bottom-nav" class="bottom-nav">
+            <button class="nav-item active" data-page="home">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item" data-page="capture">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="nav-label">Capture</span>
+            </button>
+            <button class="nav-item nav-fab" data-page="capture">
+                <svg class="fab-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+            </button>
+            <button class="nav-item" data-page="dashboard">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                </svg>
+                <span class="nav-label">Stats</span>
+            </button>
+            <button class="nav-item" data-page="history">
+                <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                </svg>
+                <span class="nav-label">History</span>
+            </button>
         </nav>
 
         <!-- Main Content Area -->
@@ -60,35 +85,58 @@
             <!-- Home Page -->
             <section id="home-page" class="page active">
                 <div class="welcome-section">
-                    <h2>Welcome to Your Food Journey! 🌟</h2>
-                    <p>Track your nutrition with AI-powered food recognition</p>
+                    <h1 class="welcome-title">Track Your Nutrition</h1>
+                    <p class="welcome-subtitle">Smart food analysis powered by AI</p>
                     
                     <div class="quick-actions">
-                        <button id="quick-capture-btn" class="primary-btn">
-                            📸 Quick Capture
+                        <button id="quick-capture-btn" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                            </svg>
+                            Quick Capture
                         </button>
-                        <button id="view-dashboard-btn" class="secondary-btn">
-                            📊 View Dashboard
+                        <button id="view-dashboard-btn" class="btn btn-secondary">
+                            View Stats
                         </button>
                     </div>
                 </div>
 
-                <div class="today-summary">
-                    <h3>Today's Summary</h3>
-                    <div class="summary-cards">
+                <div class="card">
+                    <h3 class="result-header">Today's Progress</h3>
+                    <div class="summary-grid">
                         <div class="summary-card">
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24" fill="#5B21B6">
+                                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+                                </svg>
+                            </div>
                             <div class="card-value" id="today-calories">0</div>
                             <div class="card-label">Calories</div>
                         </div>
                         <div class="summary-card">
+                            <div class="card-icon" style="background: #FEE2E2;">
+                                <svg viewBox="0 0 24 24" fill="#EF4444">
+                                    <path d="M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17,8.4L13.4,12L17,15.6L15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4Z"/>
+                                </svg>
+                            </div>
                             <div class="card-value" id="today-protein">0g</div>
                             <div class="card-label">Protein</div>
                         </div>
                         <div class="summary-card">
+                            <div class="card-icon" style="background: #FEF3C7;">
+                                <svg viewBox="0 0 24 24" fill="#F59E0B">
+                                    <path d="M12,2L4,7V12.5C4,18.5 8.92,20.74 11.1,21.5C11.35,21.6 11.55,21.68 11.71,21.74C11.78,21.77 11.85,21.79 11.91,21.82C11.94,21.83 11.97,21.84 12,21.84V2Z"/>
+                                </svg>
+                            </div>
                             <div class="card-value" id="today-carbs">0g</div>
                             <div class="card-label">Carbs</div>
                         </div>
                         <div class="summary-card">
+                            <div class="card-icon" style="background: #D1FAE5;">
+                                <svg viewBox="0 0 24 24" fill="#10B981">
+                                    <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                                </svg>
+                            </div>
                             <div class="card-value" id="today-fat">0g</div>
                             <div class="card-label">Fat</div>
                         </div>
@@ -99,17 +147,26 @@
             <!-- Food Capture Page -->
             <section id="capture-page" class="page">
                 <div class="capture-container">
-                    <h2>Capture Your Food 📸</h2>
+                    <h2 class="welcome-title">Add Food</h2>
                     
                     <div class="capture-options">
                         <button id="camera-btn" class="capture-btn">
-                            📷 Take Photo
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"/>
+                            </svg>
+                            <span>Camera</span>
                         </button>
                         <button id="upload-btn" class="capture-btn">
-                            🖼️ Upload Image
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z"/>
+                            </svg>
+                            <span>Upload</span>
                         </button>
                         <button id="text-input-btn" class="capture-btn">
-                            ✍️ Describe Food
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19,10H20A2,2 0 0,1 22,12V17A2,2 0 0,1 20,19H4A2,2 0 0,1 2,17V12A2,2 0 0,1 4,10H5V9A7,7 0 0,1 12,2A7,7 0 0,1 19,9V10M12,4A5,5 0 0,0 7,9V10H17V9A5,5 0 0,0 12,4Z"/>
+                            </svg>
+                            <span>Text</span>
                         </button>
                     </div>
 
@@ -234,25 +291,10 @@
     <!-- Scripts -->
     <script src="./src/js/utils.js"></script>
     <script src="./src/js/storage.js"></script>
-    <script src="./src/js/camera.js"></script>
+    <script src="./src/js/nutrition-api.js"></script>
     <script src="./src/js/ai-vision.js"></script>
-    <script src="./src/js/nutrition.js"></script>
-    <script src="./src/js/dashboard.js"></script>
-    <script src="./src/components/camera-modal.js"></script>
-    <script src="./src/components/food-entry.js"></script>
-    <script src="./src/components/chart-widgets.js"></script>
-    <script src="./src/js/app.js"></script>
+    <script src="./src/js/app-modern.js"></script>
 
-    <!-- App Initialization -->
-    <script>
-        // Initialize the Food Tracker App
-        let foodTrackerApp;
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            foodTrackerApp = new FoodTrackerApp();
-            window.foodTrackerApp = foodTrackerApp; // Make it globally accessible
-        });
-    </script>
     
     <!-- Service Worker Registration -->
     <script>
