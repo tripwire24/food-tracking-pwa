@@ -243,6 +243,17 @@
     <script src="/src/components/chart-widgets.js"></script>
     <script src="/src/js/app.js"></script>
 
+    <!-- App Initialization -->
+    <script>
+        // Initialize the Food Tracker App
+        let foodTrackerApp;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            foodTrackerApp = new FoodTrackerApp();
+            window.foodTrackerApp = foodTrackerApp; // Make it globally accessible
+        });
+    </script>
+    
     <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
