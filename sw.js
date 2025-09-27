@@ -4,23 +4,23 @@ const DYNAMIC_CACHE = 'dynamic-v1.0.0';
 
 // Files to cache immediately
 const STATIC_FILES = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/src/css/main.css',
-    '/src/css/components.css',
-    '/src/css/responsive.css',
-    '/src/js/app.js',
-    '/src/js/utils.js',
-    '/src/js/storage.js',
-    '/src/js/camera.js',
-    '/src/js/ai-vision.js',
-    '/src/js/nutrition.js',
-    '/src/js/dashboard.js',
-    '/src/components/camera-modal.js',
-    '/src/components/food-entry.js',
-    '/src/components/chart-widgets.js',
-    '/offline.html'
+    './',
+    './index.html',
+    './manifest.json',
+    './src/css/main.css',
+    './src/css/components.css',
+    './src/css/responsive.css',
+    './src/js/app.js',
+    './src/js/utils.js',
+    './src/js/storage.js',
+    './src/js/camera.js',
+    './src/js/ai-vision.js',
+    './src/js/nutrition.js',
+    './src/js/dashboard.js',
+    './src/components/camera-modal.js',
+    './src/components/food-entry.js',
+    './src/components/chart-widgets.js',
+    './offline.html'
 ];
 
 // API endpoints to cache dynamically
@@ -155,7 +155,7 @@ async function cacheFirst(request) {
         
         // Return offline page for navigation requests
         if (request.mode === 'navigate') {
-            return caches.match('/offline.html');
+            return caches.match('./offline.html');
         }
         
         throw error;
@@ -184,7 +184,7 @@ async function networkFirst(request) {
         
         // Return offline page for navigation requests
         if (request.mode === 'navigate') {
-            return caches.match('/offline.html');
+            return caches.match('./offline.html');
         }
         
         throw error;
